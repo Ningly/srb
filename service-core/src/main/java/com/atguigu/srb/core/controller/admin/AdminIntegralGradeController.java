@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Slf4j
-@CrossOrigin
 @RestController
 @RequestMapping("/admin/core/integralGrade")
 @Api(tags = "积分等级管理")
