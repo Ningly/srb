@@ -3,6 +3,8 @@ package com.atguigu.srb.core.mapper;
 import com.atguigu.srb.core.pojo.entity.UserAccount;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.math.BigDecimal;
+
 /**
  * <p>
  * 用户账户 Mapper 接口
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserAccountMapper extends BaseMapper<UserAccount> {
 
+    void updateAccount(String bindCode, BigDecimal amount, BigDecimal freezeAmount);
 }
