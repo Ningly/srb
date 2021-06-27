@@ -1,6 +1,7 @@
 package com.atguigu.srb.core.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
 @AllArgsConstructor
@@ -16,3 +17,4 @@ public enum ReturnMethodEnum {
     private Integer method;
     private String msg;
 }
+
