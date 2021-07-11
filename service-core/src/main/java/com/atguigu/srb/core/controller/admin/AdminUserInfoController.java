@@ -1,8 +1,14 @@
 package com.atguigu.srb.core.controller.admin;
 
+import com.atguigu.common.exception.Assert;
 import com.atguigu.common.result.R;
+import com.atguigu.common.result.ResponseEnum;
+import com.atguigu.srb.base.util.JwtUtils;
 import com.atguigu.srb.core.pojo.entity.UserInfo;
 import com.atguigu.srb.core.pojo.query.UserInfoQuery;
+import com.atguigu.srb.core.pojo.vo.AdminLoginVO;
+import com.atguigu.srb.core.pojo.vo.LoginVO;
+import com.atguigu.srb.core.pojo.vo.UserInfoVO;
 import com.atguigu.srb.core.service.UserInfoService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "会员管理")
 @RestController
@@ -22,6 +29,36 @@ public class AdminUserInfoController {
 
     @Resource
     private UserInfoService userInfoService;
+
+
+    @ApiOperation("会员登录")
+    @PostMapping("/login")
+    public R login(@RequestBody AdminLoginVO adminLoginVO, HttpServletRequest request) {
+
+        LoginVO loginVO =new LoginVO();
+        loginVO.setMobile(adminLoginVO.getUsername());
+        loginVO.setPassword(adminLoginVO.getPassword());
+        loginVO.setUserType(2);
+
+        String mobile = loginVO.getMobile();
+        String password = loginVO.getPassword();
+        Assert.notEmpty(mobile, ResponseEnum.MOBILE_NULL_ERROR);
+        Assert.notEmpty(password, ResponseEnum.PASSWORD_NULL_ERROR);
+
+        String ip = request.getRemoteAddr();
+        UserInfoVO userInfoVO = userInfoService.login(loginVO, ip);
+
+        return R.ok().data("userInfo", userInfoVO);
+    }
+
+
+    @ApiOperation("会员登录")
+    @GetMapping("/info")
+    public R getInfo(@RequestParam String token) {
+        Long userId = JwtUtils.getUserId(token);
+        UserInfo userInfo = userInfoService.getById(userId);
+        return R.ok().data("info", userInfo);
+    }
 
     @ApiOperation("获取会员分页列表")
     @GetMapping("/list/{page}/{limit}")
